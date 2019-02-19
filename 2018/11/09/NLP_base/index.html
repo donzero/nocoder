@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="NLP基础文本的表示自然语言理解的问题要转化为机器学习的问题，第一步肯定是要找一种方法把这些文本符号数学化。词向量是用一个向量来表示某个词的方法。下面介绍几种常见的词向量。 SOW 词集模型忽略文本词序、语法和句法，仅仅记录某个词是否在文本中出现。具体地，根据语料库获得一个单词集合，集合中保存着语料库中出现过的所有单词，集合的长度为 |V|，作为词向量的长度。对于每一个词，将该词在字典中对应的序号">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NLP基础">
+<meta property="og:url" content="https://blog.nocoder.top/2018/11/09/NLP_base/index.html">
+<meta property="og:site_name" content="nocoder">
+<meta property="og:description" content="NLP基础文本的表示自然语言理解的问题要转化为机器学习的问题，第一步肯定是要找一种方法把这些文本符号数学化。词向量是用一个向量来表示某个词的方法。下面介绍几种常见的词向量。 SOW 词集模型忽略文本词序、语法和句法，仅仅记录某个词是否在文本中出现。具体地，根据语料库获得一个单词集合，集合中保存着语料库中出现过的所有单词，集合的长度为 |V|，作为词向量的长度。对于每一个词，将该词在字典中对应的序号">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-19T13:08:57.593Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NLP基础">
+<meta name="twitter:description" content="NLP基础文本的表示自然语言理解的问题要转化为机器学习的问题，第一步肯定是要找一种方法把这些文本符号数学化。词向量是用一个向量来表示某个词的方法。下面介绍几种常见的词向量。 SOW 词集模型忽略文本词序、语法和句法，仅仅记录某个词是否在文本中出现。具体地，根据语料库获得一个单词集合，集合中保存着语料库中出现过的所有单词，集合的长度为 |V|，作为词向量的长度。对于每一个词，将该词在字典中对应的序号">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.nocoder.top/2018/11/09/NLP_base/">
+
+
+
+
+
+  <title>NLP基础 | nocoder</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"><a href="https://github.com/donzero"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">nocoder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学习收集，共同进步~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.nocoder.top/2018/11/09/NLP_base/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="deng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blog_me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="nocoder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NLP基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-09T21:36:00+08:00">
+                2018-11-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="NLP基础"><a href="#NLP基础" class="headerlink" title="NLP基础"></a>NLP基础</h1><h2 id="文本的表示"><a href="#文本的表示" class="headerlink" title="文本的表示"></a>文本的表示</h2><p>自然语言理解的问题要转化为机器学习的问题，第一步肯定是要找一种方法把这些文本符号数学化。词向量是用一个向量来表示某个词的方法。下面介绍几种常见的词向量。</p>
+<h3 id="SOW-词集模型"><a href="#SOW-词集模型" class="headerlink" title="SOW 词集模型"></a>SOW 词集模型</h3><p>忽略文本词序、语法和句法，仅仅记录某个词是否在文本中出现。具体地，根据语料库获得一个单词集合，集合中保存着语料库中出现过的所有单词，集合的长度为 |V|，作为词向量的长度。对于每一个词，将该词在字典中对应的序号所在的位置上的值置为1，其他位置上的值置为0。</p>
+<p>例如，字典集合为<code>(&quot;a&quot;, &quot;am&quot;, &quot;beautiful&quot;, &quot;i&quot;, &quot;is&quot;, &quot;not&quot;, &quot;she&quot;)</code>，那么is对应的词向量为<code>[0, 0, 0, 0, 1, 0, 0]</code>，文本<code>&quot;she is beautiful&quot;</code>对应的向量为<code>[0, 0, 1, 0, 1, 0, 1]</code>。</p>
+<h3 id="BOW-词袋模型"><a href="#BOW-词袋模型" class="headerlink" title="BOW 词袋模型"></a>BOW 词袋模型</h3><p>与SOW相比，BOW将文本中某个单词出现的次数也考虑到词向量中。</p>
+<p>例如，<code>&quot;she is not beautiful, is she?&quot;</code>对应的向量为<code>[0, 0, 1, 0, 2, 1, 2]</code>。</p>
+<h3 id="nBOW-标准化的词袋模型"><a href="#nBOW-标准化的词袋模型" class="headerlink" title="nBOW 标准化的词袋模型"></a>nBOW 标准化的词袋模型</h3><p>与BOW相比，nBOW多了标准化的步骤。若 <code>c_i</code>代表向量在第 i个位置上对应的单词在文本中出现的次数，<code>d_i</code>为向量在第 i个位置上的值，则 :</p>
+<p><code>d_i=c_i/∑(j=1,|v|)c_j</code></p>
+<p>例如：<code>&quot;she is not beautiful, is she?&quot;</code>对应的向量为<code>[0, 0, 0.17, 0, 0.33, 0.17, 0.33]</code>。</p>
+<h3 id="TF-IDF-词频-逆文档频率"><a href="#TF-IDF-词频-逆文档频率" class="headerlink" title="TF-IDF 词频-逆文档频率"></a>TF-IDF 词频-逆文档频率</h3><p>TF-IDF中，每一单词对应的值是词频和逆文本频率的乘积。TF基于单个文本计算，IDF则是基于整个语料库计算。</p>
+<p>词频：是指某个词在文本中出现的次数 ci。由于不同的文本有不同的长度，为了方便文本之间的比较，可以将词频标准化。</p>
+<ul>
+<li>方法一，TF=某个词在文本中出现的次数文本的总词数；</li>
+<li>方法二，TF=某个词在文本中出现的次该文本中出现次数最多的单词的出现次数。</li>
+</ul>
+<p>逆文档频率：如果一个单词在整个语料库中的很多文本里都出现，那么该单词的逆文本频率就越小。一种常见的计算方法是<code>IDF=log(语料库中的总的文本数量/(包含该词的文本数量+1))</code>。分母之所以要加1，是为了避免分母为0（即所有文档都不包含该词）。</p>
+<p>TF-IDF与文本中的某个词的出现次数成正比，与整个语料库中存在该词的文本的总数量成反比。TF-IDF倾向于过滤掉常见的词语，保留重要的词语。一个文本中的某个单词的TF-IDF值越大，说明在给定语料库的前提下该单词在这个文本中越重要。</p>
+<p>最后，它的缺点：一方面，单纯以“词频”衡量一个词的重要性不够全面，有时重要的单词可能出现次数并不多；另一方面，TF-IDF也忽略文本词序、语法和句法。</p>
+<h3 id="N-Gram-多元语言模型"><a href="#N-Gram-多元语言模型" class="headerlink" title="N-Gram 多元语言模型"></a>N-Gram 多元语言模型</h3><p>常见的N-Gram模型包括unigram一元语言模型、bigram二元语言模型和trigram三元语言模型。<br>实践表明，四元及四元以上的语言模型对自然语言处理任务的帮助不大。前面所介绍的SOW、BOW、nBOW、TF-IDF都是基于unigram模型介绍的，它们假设文本中的单词都是相互独立的，忽略了单词出现顺序和文本结构的影响。</p>
+<p>对于bigram和trigram模型，同样可以转换成以上的词向量表示方法。</p>
+<ul>
+<li>对于bigram模型，<code>&quot;she is not beautiful, is she?&quot;</code>中包括<code>[&quot;she_is&quot;, &quot;is_not&quot;, &quot;not_beautiful&quot;, &quot;beautiful_is&quot;, &quot;is_she&quot;]</code>；</li>
+<li>对于trigram模型，<code>&quot;she is not beautiful, is she?&quot;</code>中包括<code>[&quot;she_is_not&quot;, &quot;is_not_beautiful&quot;, &quot;not_beautiful_is&quot;, &quot;beautiful_is_she&quot;]</code>。</li>
+</ul>
+<h3 id="LSI-LDA"><a href="#LSI-LDA" class="headerlink" title="LSI/LDA"></a>LSI/LDA</h3><p>向量空间模型VSM中词向量的长度都为 |V|，通常 |V|是一个很大的数，我们可以对其进行降维处理。经典的向量空间模型往往基于一个基本假设：文档之间重复的词语越多越可能相似。这一点在实际中并不尽然。VSM没有能力处理一词多义和一义多词问题。</p>
+<p>例如同义词也分别被表示成独立的一维，计算向量的余弦相似度时会低估用户期望的相似度；而某个词项有多个词义时，始终对应同一维度，因此计算的结果会高估用户期望的相似度。很多时候相关程度取决于背后的语义联系，而非表面的词语重复。主题模型是特征提取的一种方法，它是对文字隐含主题进行建模的方法，可以用来进行语义挖掘。</p>
+<p>初始的词向量可以是SOW、BOW、nBOW、TF-IDF等，通常使用TF-IDF，得到隐含的低维语义空间，达到降维的目的。</p>
+<ul>
+<li>潜在语义分析（LSA或LSI）：一种基于奇异值分解（SVD）的方法来得到文本的主题的简单实用的主题模型。LSA经过一次奇异值分解就可以得到主题模型，同时解决词义的问题。但其有很多不足，导致它在当前实际的主题模型中已基本不再使用。<ul>
+<li>首先，SVD的时间复杂度高，计算耗时【可以选择非负矩阵分解NMF方法来加快处理速度】。</li>
+<li>其次，模型中的主题数目一般是凭经验选择的，这个问题存在于大部分的主题模型【可以使用交叉验证的方法寻找适合的主题数】。</li>
+<li>还有就是，LSA得到的不是一个概率模型，缺乏统计基础，结果难以直观的解释【可以用pLSA或LDA这类基于概率统计的主题模型来替代基于矩阵分解的主题模型】。</li>
+</ul>
+</li>
+<li>概率潜在语义分析（pLSA或pLSI）：pLSA是一个两层概率模型。在pLSA中，D代表文档，Z代表隐含类别或者主题，W为观察到的单词，<ul>
+<li><code>P(d_i)</code>表示文档 <code>d_i</code>出现的概率（顺从多项式分布）</li>
+<li><code>P(z_k|d_i)</code>表示文档<code>d_i</code>中出现主题<code>z_k</code>下的单词的概率（顺从多项式分布）</li>
+<li><code>P(w_j|z_k)</code>表示主题<code>z_k</code>下出现单词<code>w_j</code>的概率<br>因此我们的训练目标是最大化:<code>P(D,W)=∑(i=1,M)P(d_i) ∑(j=1,N_(d_i)) ∑(k=1,K) P(w_j|z_k) P(z_k|d_i)</code><br>pLSA的参数个数是 <code>M × K + K × |V|</code>，所以参数个数随着文档数量的增加而增加，通过EM算法求解。同时，文档之间相互独立，文档内的单词之间也相互独立。但是很重要的是，pLSA只是对已有文档的建模，也就是说模型不适合于新文档，因此pLSA存在容易过拟合的缺点。【困难在于 <code>P(zk|di)</code>的构造】</li>
+</ul>
+</li>
+<li>隐含狄利克雷分布（LDA）：LDA引入了Dirichlet先验概率，pLSA是LDA的一种特殊情况，因此LDA是一个三层概率模型，相比pLSA更加复杂。【当训练样本量足够大，pLSA的效果等同于LDA】<ul>
+<li>LDA生成模型中， M篇文档会对应于 M个独立的 Dirichlet-Multinomial共轭结构；</li>
+<li>K个主题会对应于 K 个独立的 Dirichlet-Multinomial 共轭结构。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Word2vec模型"><a href="#Word2vec模型" class="headerlink" title="Word2vec模型"></a>Word2vec模型</h3><p>对于BOW、TF-IDF等基于词袋模型来说，不同文本得到的词向量都近乎正交，而且无法计算独立单词组成的文本的距离。</p>
+<p>word2vec只能得到词向量，比较词之间的相似度，通过简单的加权、tag加权、tf-idf加权等方式得到文档向量。</p>
+<h3 id="GloVe模型"><a href="#GloVe模型" class="headerlink" title="GloVe模型"></a>GloVe模型</h3><h3 id="Doc2vec模型"><a href="#Doc2vec模型" class="headerlink" title="Doc2vec模型"></a>Doc2vec模型</h3><p>加权的方式丢失了最重要的句子结构信息（也可以说是词序信息），而doc2vec的方法则保存了这种信息。</p>
+<h2 id="距离度量"><a href="#距离度量" class="headerlink" title="距离度量"></a>距离度量</h2><h3 id="欧氏距离"><a href="#欧氏距离" class="headerlink" title="欧氏距离"></a>欧氏距离</h3><p><code>dist(a,b)=||a−b||</code></p>
+<p>衡量的是空间各点的绝对距离，跟各个点所在的位置坐标直接相关。欧氏距离属于几何距离，几何距离还包括曼哈顿距离、切比雪夫距离。</p>
+<h3 id="余弦距离"><a href="#余弦距离" class="headerlink" title="余弦距离"></a>余弦距离</h3><p><code>Cosine(a,b)=&lt;a,b&gt;/(|a|×|b|)</code></p>
+<p>衡量的是空间向量的夹角，更体现方向上的差距，对绝对数值不敏感，修正了度量标准不统一的问题。由于余弦距离对绝对数值不敏感，所以可以通过所有的样本在维度上减去一个均值（即令特征的均值为0）来修正这种不合理。</p>
+<h3 id="杰卡徳系数"><a href="#杰卡徳系数" class="headerlink" title="杰卡徳系数"></a>杰卡徳系数</h3><p><code>Jaccard(a,b)=|a⋂b|/|a⋃b|</code></p>
+<p>衡量的是两个集合中不同元素占所有元素的比例，不关注具体的值，而关注某个值是否存在。与其类似的还有Dice系数：2×|a⋂b| 除以 |a|+|b|。</p>
+<h3 id="汉明距离"><a href="#汉明距离" class="headerlink" title="汉明距离"></a>汉明距离</h3><p>汉明距离的前提是待比较的两个序列是等长的，它表示两个序列对应位置的值不同的数量，相当于进行异或运算。</p>
+<h3 id="编辑距离"><a href="#编辑距离" class="headerlink" title="编辑距离"></a>编辑距离</h3><p>编辑距离是指两个文本之间，由一个转成另一个所需的最少编辑操作次数。许可的编辑操作包括将一个字符／单词替换成另一个字符／单词，插入一个字符／单词，删除一个字符／单词【动态规划问题】。</p>
+<h3 id="相对熵（KL散度）"><a href="#相对熵（KL散度）" class="headerlink" title="相对熵（KL散度）"></a>相对熵（KL散度）</h3><p><code>D(p||q)=∑(i=1,|V|) p(x_i) log (p(x_i)/q(x_i))</code></p>
+<p>相对熵可以度量两个随机变量的距离。KL散度是两个概率分布P和Q差别的非对称性的度量。由于相对熵是非对称的，因此可以分别计算<code>D(p||q)</code>和<code>D(q||p)</code>然后取平均</p>
+<h3 id="Word-Mover’s-Distance-词移距离"><a href="#Word-Mover’s-Distance-词移距离" class="headerlink" title="Word Mover’s Distance 词移距离"></a>Word Mover’s Distance 词移距离</h3><p>简单来说，对于一个文本中的所有词的词向量，分别找出另一个文本中距离和该词向量距离最近的词向量（即最小距离），最后将这些最小距离求和。不过实际中，在词移距离中的词向量与词向量之间并不是一对一的关系。一个文本中词向量可能对应着另一个文本中的多个词向量，只是权重不同。</p>
+<p><code>min(T⩾0) ∑(i,j=1,n) T_ij ||x_i−x_j||</code></p>
+<p><code>s.t.∑(j=1,n) T_ij = di</code>, <code>∑(i=1,n)T_ij=dj</code></p>
+
+      
+    </div>
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    deng
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.nocoder.top/2018/11/09/NLP_base/" title="NLP基础">https://blog.nocoder.top/2018/11/09/NLP_base/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"><i class="fa fa-tag"></i> NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/06/ML_TensorFlow_1/" rel="next" title="TensorFlow学习1">
+                <i class="fa fa-chevron-left"></i> TensorFlow学习1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/11/NLP_word2vec/" rel="prev" title="word2vec词向量">
+                word2vec词向量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog_me.jpg" alt="deng">
+            
+              <p class="site-author-name" itemprop="name">deng</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/donzero" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:donzero@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NLP基础"><span class="nav-number">1.</span> <span class="nav-text">NLP基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文本的表示"><span class="nav-number">1.1.</span> <span class="nav-text">文本的表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SOW-词集模型"><span class="nav-number">1.1.1.</span> <span class="nav-text">SOW 词集模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BOW-词袋模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">BOW 词袋模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nBOW-标准化的词袋模型"><span class="nav-number">1.1.3.</span> <span class="nav-text">nBOW 标准化的词袋模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TF-IDF-词频-逆文档频率"><span class="nav-number">1.1.4.</span> <span class="nav-text">TF-IDF 词频-逆文档频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#N-Gram-多元语言模型"><span class="nav-number">1.1.5.</span> <span class="nav-text">N-Gram 多元语言模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSI-LDA"><span class="nav-number">1.1.6.</span> <span class="nav-text">LSI/LDA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Word2vec模型"><span class="nav-number">1.1.7.</span> <span class="nav-text">Word2vec模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GloVe模型"><span class="nav-number">1.1.8.</span> <span class="nav-text">GloVe模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Doc2vec模型"><span class="nav-number">1.1.9.</span> <span class="nav-text">Doc2vec模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#距离度量"><span class="nav-number">1.2.</span> <span class="nav-text">距离度量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#欧氏距离"><span class="nav-number">1.2.1.</span> <span class="nav-text">欧氏距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#余弦距离"><span class="nav-number">1.2.2.</span> <span class="nav-text">余弦距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#杰卡徳系数"><span class="nav-number">1.2.3.</span> <span class="nav-text">杰卡徳系数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#汉明距离"><span class="nav-number">1.2.4.</span> <span class="nav-text">汉明距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编辑距离"><span class="nav-number">1.2.5.</span> <span class="nav-text">编辑距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相对熵（KL散度）"><span class="nav-number">1.2.6.</span> <span class="nav-text">相对熵（KL散度）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Word-Mover’s-Distance-词移距离"><span class="nav-number">1.2.7.</span> <span class="nav-text">Word Mover’s Distance 词移距离</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">deng</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">网站总字数&#58;</span>
+    
+    <span title="Site words total count">70.5k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问次数
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

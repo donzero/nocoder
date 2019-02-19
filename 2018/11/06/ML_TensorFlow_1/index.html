@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML,TensorFlow,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="TensorFlow是指“张量的流动”。 TensorFlow的数据流图是由节点 (node)和边(edge)组成的有向无环图 (directed acycline graph，DAG)。TensorFlow由Tensor和Flow两部分组成，Tensor(张量)代表了数据流图中的边，而Flow(流动)这个动作就代表了数据流图中节点所做的操作。  背景以及优点，目前发展前景。 安装TensorFl">
+<meta name="keywords" content="ML,TensorFlow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow学习1">
+<meta property="og:url" content="https://blog.nocoder.top/2018/11/06/ML_TensorFlow_1/index.html">
+<meta property="og:site_name" content="nocoder">
+<meta property="og:description" content="TensorFlow是指“张量的流动”。 TensorFlow的数据流图是由节点 (node)和边(edge)组成的有向无环图 (directed acycline graph，DAG)。TensorFlow由Tensor和Flow两部分组成，Tensor(张量)代表了数据流图中的边，而Flow(流动)这个动作就代表了数据流图中节点所做的操作。  背景以及优点，目前发展前景。 安装TensorFl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-19T12:57:01.199Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow学习1">
+<meta name="twitter:description" content="TensorFlow是指“张量的流动”。 TensorFlow的数据流图是由节点 (node)和边(edge)组成的有向无环图 (directed acycline graph，DAG)。TensorFlow由Tensor和Flow两部分组成，Tensor(张量)代表了数据流图中的边，而Flow(流动)这个动作就代表了数据流图中节点所做的操作。  背景以及优点，目前发展前景。 安装TensorFl">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.nocoder.top/2018/11/06/ML_TensorFlow_1/">
+
+
+
+
+
+  <title>TensorFlow学习1 | nocoder</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"><a href="https://github.com/donzero"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">nocoder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学习收集，共同进步~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.nocoder.top/2018/11/06/ML_TensorFlow_1/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="deng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blog_me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="nocoder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TensorFlow学习1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T15:42:00+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/ML/" itemprop="url" rel="index">
+                    <span itemprop="name">ML</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>TensorFlow是指“张量的流动”。</p>
+<p>TensorFlow的数据流图是由节点 (node)和边(edge)组成的有向无环图 (directed acycline graph，DAG)。TensorFlow由Tensor和Flow两部分<br>组成，Tensor(张量)代表了数据流图中的边，而Flow(流动)这个动作就代表了数据流图中节点<br>所做的操作。</p>
+<ul>
+<li>背景以及优点，目前发展前景。</li>
+<li>安装TensorFlow</li>
+</ul>
+<h2 id="依赖模块"><a href="#依赖模块" class="headerlink" title="依赖模块"></a>依赖模块</h2><ul>
+<li>numpy    存储和处理大型矩阵的科学计算包。<code>conda install numpy</code></li>
+<li>matplotlib 绘图库</li>
+<li>jupyter Ipython的升级版，在浏览器中创建和共享代码、方程、说明文档</li>
+<li>scikit-image 对图像的预处理</li>
+<li>librosa 音频特征提取。<em>ps:conda好像没有找到还是不能安装？</em></li>
+<li>nltk 语料库,方便地完成很多自然语言处理的任务</li>
+<li>keras 第一个被添加到TensorFlow核心中的高级别框架,tensorflow默认API</li>
+<li>tflearn 另一个支持TensorFlow的第三方框架。<code>pip install git+https://github.com/tflearn/tflearn.git</code></li>
+</ul>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h3><p>自下而上:</p>
+<ul>
+<li>核心层：<ul>
+<li>设备层(CPU、GPU、FPGA)，网络层(gRPC、RDMA远程直接数据存取)</li>
+<li>数据操作层</li>
+<li>图计算层</li>
+</ul>
+</li>
+<li>API层(TensorFlow核心API,python,java,C++,Go)</li>
+<li>应用层(训练相关类库，预测相关类库)</li>
+</ul>
+<h3 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h3><p>图的定义与图的运行完全分开，’符号主义’的库。  </p>
+<ul>
+<li><p>定义各种变量，建立数据流图(网络结构图)，在数据流图中规定各变量之间的计算关系。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="comment"># 定义了一个操作，但实际上并没有运行</span></span><br><span class="line">t = tf.add(<span class="number">8</span>, <span class="number">9</span>)</span><br><span class="line">print(t) <span class="comment"># 输出 Tensor("Add_1:0", shape=(), dtype=int32)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>TensorFlow中涉及的运算都要放在图中，而图的运行只发生在会话 (session)中。开启会话后，就可以用数据去填充节点，进行运算；关闭会话后</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="comment"># 创建图</span></span><br><span class="line">a = tf.constant([<span class="number">1.0</span>, <span class="number">2.0</span>])</span><br><span class="line">b = tf.constant([<span class="number">3.0</span>, <span class="number">4.0</span>])</span><br><span class="line">c = a * b</span><br><span class="line"><span class="comment"># 创建会话</span></span><br><span class="line">sess = tf.Session()</span><br><span class="line"><span class="comment"># 计算c</span></span><br><span class="line"><span class="keyword">print</span> sess.run(c) <span class="comment"># 进行矩阵乘法，输出[3., 8.]</span></span><br><span class="line">sess.close()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="边"><a href="#边" class="headerlink" title="边"></a>边</h4><p>边有两种连接关系：数据依赖和控制依赖。实线边表示数据依赖，代表数据，即张量。任意维度的数据统称为张量</p>
+<h4 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h4><p>图中的节点 又称为算子 ，它代表一个操作 (operation，OP)</p>
+<h4 id="图"><a href="#图" class="headerlink" title="图"></a>图</h4><p>把操作任务描述成有向无环图。那么，如何构建一个图呢？构建图的第一步是创建各个节点。</p>
+<h4 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h4><p>启动图的第一步是创建一个Session对象。会话(session)提供在图中执行操作的一些方法。</p>
+<p>在调用Session对象的run()方法来执行图时，传入一些Tensor，这个过程叫填充 (feed)；返回的结果类型根据输入的类型而定，这个过程叫取回 (fetch)</p>
+<p>会话主要有两个API接口：Extend和Run。Extend操作是在Graph中添加节点和边，Run操作是输入计算的节点和填充必要的数据后，进行运算，并输出运算结果。</p>
+<h4 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h4><p>设备 (device)是指一块可以用来运算并且拥有自己的地址空间的硬件，如GPU和CPU。</p>
+<h4 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h4><p>变量 (variable)是一种特殊的数据，它在图中有固定的位置，不像普通张量那样可以流动。使用tf.Variable()构造函数，这个构造函数需要一个初始值。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个变量，初始化为标量0</span></span><br><span class="line">state = tf.Variable(<span class="number">0</span>, name=<span class="string">"counter"</span>)</span><br><span class="line"><span class="comment"># 创建一个常量张量</span></span><br><span class="line">input1 = tf.constant(<span class="number">3.0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># TensorFlow 还提供了填充机制，可以在构建图时使用tf.placeholder()临时替代任意操作的张量，在调用Session对象的run()方法去执行图时，使用填充数据作为调用的参数，调用结束后，填充数据就消失</span></span><br><span class="line">input1 = tf.placeholder(tf.float32)</span><br><span class="line">input2 = tf.placeholder(tf.float32)</span><br><span class="line">output = tf.multiply(input1, input2)</span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line"><span class="keyword">print</span> sess.run([output], feed_dict=&#123;input1:[<span class="number">7.</span>], input2:[<span class="number">2.</span>]&#125;)</span><br><span class="line"><span class="comment"># 输出 [array([ 14.], dtype=float32)]</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h4><p>操作 (operation)是对抽象操作(如matmul或者add)的一个统称，而内核 (kernel)则是能够运行在特定设备(如CPU、GPU)上的一种对操作的实现。因此，同一个操作可能会对应多个内核。</p>
+<h3 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h3><p>TensorFlow中有两个作用域 (scope)，一个是<code>name_scope</code>，另一个是<code>variable_scope</code>。</p>
+<ul>
+<li><p><code>variable_scope</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">v = tf.get_variable(name, shape, dtype, initializer) # 通过所给的名字创建或是返回一个变量</span><br><span class="line">tf.variable_scope(&lt;scope_name&gt;) # 为变量指定命名空间</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>name_scope</code>:用name_scope为变量划分范围，在可视化中，这表示在计算图中的一个层级</p>
+</li>
+</ul>
+<h3 id="批标准化"><a href="#批标准化" class="headerlink" title="批标准化"></a>批标准化</h3><p>批标准化 （batch normalization，BN）是为了克服神经网络层数加深导致难以训练而诞生的。<br><em>深度神经网络随着网络深度加深，训练起来会越来越困难，收敛速度会很慢，常常会导致梯度弥散问题</em></p>
+<p>方法：批标准化一般用在非线性映射（激活函数）之前。对x =Wu +b 做规范化，使结果（输出信号各个维度）的均值为0，方差为1。让每一层的输入有一个稳定的分布会有利于网络的训练</p>
+<p>优点：批标准化通过规范化让激活函数分布在线性区间，结果就是加大了梯度，让模型更加大胆地进行梯度下降，于是有如下优点：</p>
+<ul>
+<li>加大探索的步长，加快收敛的速度；</li>
+<li>更容易跳出局部最小值；</li>
+<li>破坏原来的数据分布，一定程度上缓解过拟合</li>
+</ul>
+<h3 id="神经元函数与优化方法"><a href="#神经元函数与优化方法" class="headerlink" title="神经元函数与优化方法"></a>神经元函数与优化方法</h3><h4 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h4><p>激活函数 （activation function）运行时激活神经网络中某一部分神经元，将激活信息向后传入下一层的神经网络。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tf.nn.relu()# 连续但不是处处可微的函数</span><br><span class="line">tf.nn.sigmoid()# 平滑非线性激活函数，</span><br><span class="line">tf.nn.tanh()# 平滑非线性激活函数</span><br><span class="line">tf.nn.elu()# 平滑非线性激活函数</span><br><span class="line">tf.nn.bias_add()</span><br><span class="line">tf.nn.crelu()# 连续但不是处处可微的函数</span><br><span class="line">tf.nn.relu6()# 连续但不是处处可微的函数</span><br><span class="line">tf.nn.softplus()# 平滑非线性激活函数</span><br><span class="line">tf.nn.softsign()# 平滑非线性激活函数</span><br><span class="line">tf.nn.dropout() # 防止过拟合，用来舍弃某些神经元</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>sigmoid:输出映射在(0,1)内，单调连续，非常适合用作输出层，并且求导比较容易。但是，它也有缺点，因为软饱和性  [15] ，一旦输入落入饱和区，f ‘ (x )就会变得接近于0，很容易产生梯度消失</li>
+<li>tanh:tanh函数也具有软饱和性。因为它的输出以0为中心，收敛速度比sigmoid要快。但是仍无法解决梯度消失的问题</li>
+<li>relu:relu在x &lt;0时硬饱和。由于x &gt;0时导数为1，所以，relu能够在x &gt;0时保持梯度不衰减，从而缓解梯度消失问题，还能够更快地收敛，并提供了神经网络的稀疏表达能力。但是，随着训练的进行，部分输入会落到硬饱和区，导致对应的权重无法更新，称为“神经元死亡”<ul>
+<li>softplus可以看作是ReLU的平滑版本。relu定义为<code>f(x)=max(x ,0)</code>。softplus定义为<code>f(x)=log(1+exp(x))</code></li>
+</ul>
+</li>
+<li>dropout：一个神经元将以概率keep_prob决定是否被抑制。</li>
+</ul>
+<h4 id="卷积函数"><a href="#卷积函数" class="headerlink" title="卷积函数"></a>卷积函数</h4><ul>
+<li>计算N维卷积的和:<code>tf.nn.convolution(input, filter, padding, strides=None,dilation_rate=None, name=None, data_format=None)</code></li>
+<li>对一个四维的输入数据input和四维的卷积核filter进行操作，然后对输入数据进行一个二维的卷积操作，最后得到卷积之后的结果:<code>tf.nn.conv2d(input, filter, strides, padding, use_cudnn_on_gpu=None,data_format= None, name=None)</code></li>
+<li>输入张量的数据维度是[batch, in_height, in_width, in_channels]，卷积核的维度是[filter_height, filter_width, in_channels, channel_multiplier]，在通道in_channels上面的卷积深度是1，depthwise_conv2d函数将不同的卷积核独立地应用在in_channels的每个通道上（从通道1到通道channel_multiplier），然后把所以的结果进行汇总。最后输出通道的总数是<code>in_channels * channel_multiplier</code>:<code>tf.nn.depthwise_conv2d (input, filter, strides, padding, rate=None, name=None,data_format=None)</code></li>
+<li>利用几个分离的卷积核去做卷积:<code>tf.nn.separable_conv2d (input, depthwise_filter, pointwise_filter, strides, padding,rate=None, name=None, data_format=None)</code></li>
+<li>Atrous卷积，又称孔卷积或者扩张卷积:<code>tf.nn.atrous_conv2d(value, filters, rate, padding, name=None)</code></li>
+<li>解卷积网络（deconvolutional network）中有时称为“反卷积”:<code>tf.nn.conv2d_transpose(value, filter, output_shape, strides, padding=&#39;SAME&#39;,data_format=&#39;NHWC&#39;, name=None)</code></li>
+<li>计算给定三维的输入和过滤器的情况下的一维卷积:<code>tf.nn.conv1d(value, filters, stride, padding, use_cudnn_on_gpu=None,data_format= None, name=None)</code></li>
+<li>用来计算给定五维的输入和过滤器的情况下的三维卷积:<code>tf.nn.conv3d(input, filter, strides, padding, name=None)</code></li>
+<li>和二维反卷积类似:<code>tf.nn.conv3d_transpose(value, filter, output_shape, strides, padding=&#39;SAME&#39;, name=None)</code></li>
+</ul>
+<h4 id="池化函数"><a href="#池化函数" class="headerlink" title="池化函数"></a>池化函数</h4><p>池化函数一般跟在卷积函数的下一层：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">tf.nn.avg_pool(value, ksize, strides, padding, data_format=&apos;NHWC&apos;, name=None)</span><br><span class="line">tf.nn.max_pool(value, ksize, strides, padding, data_format=&apos;NHWC&apos;, name=None)</span><br><span class="line">tf.nn.max_pool_with_argmax(input, ksize, strides, padding, Targmax=None, name=None)</span><br><span class="line">tf.nn.avg_pool3d(input, ksize, strides, padding, name=None)</span><br><span class="line">tf.nn.max_pool3d(input, ksize, strides, padding, name=None)</span><br><span class="line">tf.nn.fractional_avg_pool(value, pooling_ratio, pseudo_random=None, overlapping=None,</span><br><span class="line">deterministic=None, seed=None, seed2=None, name=None)</span><br><span class="line">tf.nn.fractional_max_pool(value, pooling_ratio, pseudo_random=None, overlapping=None,</span><br><span class="line">deterministic=None, seed=None, seed2=None, name=None)</span><br><span class="line">tf.nn.pool(input, window_shape, pooling_type, padding, dilation_rate=None, strides=None,</span><br><span class="line">name=None, data_format=None)</span><br></pre></td></tr></table></figure></p>
+<h4 id="分类函数"><a href="#分类函数" class="headerlink" title="分类函数"></a>分类函数</h4><p>常见的分类函数主要有<code>sigmoid_cross_entropy_with_logits、softmax、log_softmax、softmax_cross_entropy_with_logits</code>等</p>
+<h4 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class tf.train.GradientDescentOptimizer</span><br><span class="line">class tf.train.AdadeltaOptimizer</span><br><span class="line">class tf.train.AdagradOptimizer</span><br><span class="line">class tf.train.AdagradDAOptimizer</span><br><span class="line">class tf.train.MomentumOptimizer</span><br><span class="line">class tf.train.AdamOptimizer</span><br><span class="line">class tf.train.FtrlOptimizer</span><br><span class="line">class tf.train.RMSPropOptimizer</span><br></pre></td></tr></table></figure>
+<ul>
+<li>BGD(批梯度下降):优点是，使用所有训练数据计算，能够保证收敛，并且不需要逐渐减少学习率；缺点是，每一步都需要使用所有的训练数据，随着训练的进行，速度会越来越慢</li>
+<li>SGD(随机梯度下降):优点是，SGD在训练数据集很大时，仍能以较快的速度收敛；缺点是，由于抽取不可避免地梯度会有误差，需要手动调整学习率 （learning rate），但是选择合适的学习率又比较困难；容易收敛到局部最优，并且在某些情况下可能被困在鞍点</li>
+<li><p>Momentum(动量法):更新时在一定程度上保留之前的更新方向，利用当前的批次再微调本次的更新参数，因此引入了一个新的变量v（速度），作为前几次梯度的累加.</p>
+<ul>
+<li>Momentum能够更新学习率，在下降初期，前后梯度方向一致时，能够加速学习；在下降的中后期，在局部最小值的附近来回震荡时，能够抑制震荡，加快收敛</li>
+</ul>
+</li>
+<li><p>Adagrad法:自适应地为各个参数分配不同的学习率，能够控制每个维度的梯度方向。这种方法的优点是能够实现学习率的自动更改：如果本次更新时梯度大，学习率就衰减得快一些；如果这次更新时梯度小，学习率衰减得就慢一些。</p>
+</li>
+<li>Adadelta法：Adagrad法仍然存在一些问题：其学习率单调递减，在训练的后期学习率非常小，并且需要手动设置一个全局的初始学习率。Adadelta法用一阶的方法，近似模拟二阶牛顿法，解决了这些问题</li>
+<li>RMSprop法：RMSProp法与Momentum法类似，通过引入一个衰减系数，使每一回合都衰减一定比例</li>
+<li>Adam法：自适应矩估计(adaptive moment estimation)。Adam法根据损失函数针对每个参数的梯度的一阶矩估计和二阶矩估计动态调整每个参数的学习率</li>
+</ul>
+<h3 id="模型的存储于加载"><a href="#模型的存储于加载" class="headerlink" title="模型的存储于加载"></a>模型的存储于加载</h3><ul>
+<li>生成检查点文件 （checkpoint file），扩展名一般为.ckpt，通过在tf.train.Saver对象上调用Saver.save()生成。它包含权重和其他在程序中定义的变量，不包含图结构。如果需要在另一个程序中使用，需要重新创建图形结构，并告诉TensorFlow如何处理这些权重。</li>
+<li>生成图协议文件（graph proto file），这是一个二进制文件，扩展名一般为.pb，用tf.train.write_graph()保存，只包含图形结构，不包含权重，然后使用tf.import_graph_def()来加载图形。</li>
+</ul>
+<h3 id="队列和线程"><a href="#队列和线程" class="headerlink" title="队列和线程"></a>队列和线程</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">''' 创建一个先入先出队列,初始化队列插入0.1、0.2、0.3三个数字'''</span></span><br><span class="line">q = tf.FIFOQueue(<span class="number">3</span>, <span class="string">"float"</span>)</span><br><span class="line">init = q.enqueue_many(([<span class="number">0.1</span>, <span class="number">0.2</span>, <span class="number">0.3</span>],))</span><br><span class="line"><span class="comment"># 定义出队、+1、入队操作</span></span><br><span class="line">x = q.dequeue()</span><br><span class="line">y = x + <span class="number">1</span></span><br><span class="line">q_inc = q.enqueue([y])</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    <span class="comment">#sess.run(q_inc)</span></span><br><span class="line">    quelen = sess.run(q.size())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(quelen<span class="number">-2</span>):</span><br><span class="line">        sess.run(q_inc) <span class="comment"># 执行2次操作，队列中的值变为0.3,1.1,1.2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(quelen):</span><br><span class="line">        <span class="keyword">print</span> (sess.run(q.dequeue())) <span class="comment"># 输出队列的值</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''创建一个随机队列，队列最大长度为10，出队后最小长度为2'''</span></span><br><span class="line">q = tf.RandomShuffleQueue(capacity=<span class="number">10</span>, min_after_dequeue=<span class="number">2</span>, dtypes=<span class="string">"float"</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">10</span>): <span class="comment">#10次入队</span></span><br><span class="line">    sess.run(q.enqueue(i))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">8</span>): <span class="comment"># 8次出队</span></span><br><span class="line">    print(sess.run(q.dequeue()))</span><br></pre></td></tr></table></figure>
+<h3 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h3><h4 id="预加载数据"><a href="#预加载数据" class="headerlink" title="预加载数据"></a>预加载数据</h4><p>预加载数据缺点在于，将数据直接嵌在数据流图中，当训练数据较大时，很消耗内存<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x1 = tf.constant([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">x2 = tf.constant([<span class="number">4</span>, <span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">y = tf.add(x1, x2)</span><br></pre></td></tr></table></figure></p>
+<h4 id="填充数据"><a href="#填充数据" class="headerlink" title="填充数据"></a>填充数据</h4><p>使用sess.run()中的feed_dict参数,将Python产生的数据填充给后端,填充的方式也有数据量大、消耗内存等缺点，并且数据类型转换等中间环节增加了不小开销。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="comment"># 设计图</span></span><br><span class="line">a1 = tf.placeholder(tf.int16)</span><br><span class="line">a2 = tf.placeholder(tf.int16)</span><br><span class="line">b = tf.add(x1, x2)</span><br><span class="line"><span class="comment"># 用Python产生数据</span></span><br><span class="line">li1 = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">li2 = [<span class="number">4</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line"><span class="comment"># 打开一个会话，将数据填充给后端</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">	print(sess.run(b, feed_dict=&#123;a1: li1, a2: li2&#125;))</span><br></pre></td></tr></table></figure></p>
+<h4 id="从文件读取数据"><a href="#从文件读取数据" class="headerlink" title="从文件读取数据"></a>从文件读取数据</h4><ul>
+<li>把样本数据写入TFRecords二进制文件</li>
+<li>再从队列中读取</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    deng
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.nocoder.top/2018/11/06/ML_TensorFlow_1/" title="TensorFlow学习1">https://blog.nocoder.top/2018/11/06/ML_TensorFlow_1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i> ML</a>
+          
+            <a href="/tags/TensorFlow/" rel="tag"><i class="fa fa-tag"></i> TensorFlow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/20/python_numpy/" rel="next" title="numpy库学习">
+                <i class="fa fa-chevron-left"></i> numpy库学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/09/NLP_base/" rel="prev" title="NLP基础">
+                NLP基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog_me.jpg" alt="deng">
+            
+              <p class="site-author-name" itemprop="name">deng</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/donzero" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:donzero@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖模块"><span class="nav-number">1.</span> <span class="nav-text">依赖模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#系统架构"><span class="nav-number">2.1.</span> <span class="nav-text">系统架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计理念"><span class="nav-number">2.2.</span> <span class="nav-text">设计理念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#边"><span class="nav-number">2.2.1.</span> <span class="nav-text">边</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#节点"><span class="nav-number">2.2.2.</span> <span class="nav-text">节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图"><span class="nav-number">2.2.3.</span> <span class="nav-text">图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#会话"><span class="nav-number">2.2.4.</span> <span class="nav-text">会话</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设备"><span class="nav-number">2.2.5.</span> <span class="nav-text">设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变量"><span class="nav-number">2.2.6.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内核"><span class="nav-number">2.2.7.</span> <span class="nav-text">内核</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量作用域"><span class="nav-number">2.3.</span> <span class="nav-text">变量作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#批标准化"><span class="nav-number">2.4.</span> <span class="nav-text">批标准化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#神经元函数与优化方法"><span class="nav-number">2.5.</span> <span class="nav-text">神经元函数与优化方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#激活函数"><span class="nav-number">2.5.1.</span> <span class="nav-text">激活函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卷积函数"><span class="nav-number">2.5.2.</span> <span class="nav-text">卷积函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#池化函数"><span class="nav-number">2.5.3.</span> <span class="nav-text">池化函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分类函数"><span class="nav-number">2.5.4.</span> <span class="nav-text">分类函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化方法"><span class="nav-number">2.5.5.</span> <span class="nav-text">优化方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型的存储于加载"><span class="nav-number">2.6.</span> <span class="nav-text">模型的存储于加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列和线程"><span class="nav-number">2.7.</span> <span class="nav-text">队列和线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载数据"><span class="nav-number">2.8.</span> <span class="nav-text">加载数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#预加载数据"><span class="nav-number">2.8.1.</span> <span class="nav-text">预加载数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#填充数据"><span class="nav-number">2.8.2.</span> <span class="nav-text">填充数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从文件读取数据"><span class="nav-number">2.8.3.</span> <span class="nav-text">从文件读取数据</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">deng</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">网站总字数&#58;</span>
+    
+    <span title="Site words total count">70.5k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问次数
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

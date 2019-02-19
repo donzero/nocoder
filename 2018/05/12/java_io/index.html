@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java,基础,IO,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="输入输出（I/O）是指程序与外部设备或其他计算机进行交互的操作。几乎所有的程序都具有输入与输出操作，如从键盘上读取数据，从本地或网络上的文件读取数据或写入数据等。通过输入和输出操作可以从外界接收信息，或者是把信息传递给外界。">
+<meta name="keywords" content="java,基础,IO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java基础之输入输出">
+<meta property="og:url" content="https://blog.nocoder.top/2018/05/12/java_io/index.html">
+<meta property="og:site_name" content="nocoder">
+<meta property="og:description" content="输入输出（I/O）是指程序与外部设备或其他计算机进行交互的操作。几乎所有的程序都具有输入与输出操作，如从键盘上读取数据，从本地或网络上的文件读取数据或写入数据等。通过输入和输出操作可以从外界接收信息，或者是把信息传递给外界。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://blog.nocoder.top/images/pages/java_io_class.png">
+<meta property="og:image" content="https://blog.nocoder.top/images/pages/java_io_InputStream.png">
+<meta property="og:image" content="https://blog.nocoder.top/images/pages/java_io_OutputStream.jpg">
+<meta property="og:image" content="https://blog.nocoder.top/images/pages/java_io_Reader.png">
+<meta property="og:image" content="https://blog.nocoder.top/images/pages/java_io_Writer.png">
+<meta property="og:updated_time" content="2018-05-13T08:54:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java基础之输入输出">
+<meta name="twitter:description" content="输入输出（I/O）是指程序与外部设备或其他计算机进行交互的操作。几乎所有的程序都具有输入与输出操作，如从键盘上读取数据，从本地或网络上的文件读取数据或写入数据等。通过输入和输出操作可以从外界接收信息，或者是把信息传递给外界。">
+<meta name="twitter:image" content="https://blog.nocoder.top/images/pages/java_io_class.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.nocoder.top/2018/05/12/java_io/">
+
+
+
+
+
+  <title>java基础之输入输出 | nocoder</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"><a href="https://github.com/donzero"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">nocoder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学习收集，共同进步~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.nocoder.top/2018/05/12/java_io/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="nocoder">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="nocoder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java基础之输入输出</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T23:31:00+08:00">
+                2018-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>输入输出（I/O）是指程序与外部设备或其他计算机进行交互的操作。几乎所有的程序都具有输入与输出操作，如从键盘上读取数据，从本地或网络上的文件读取数据或写入数据等。通过输入和输出操作可以从外界接收信息，或者是把信息传递给外界。<br><a id="more"></a></p>
+<h2 id="流的概念"><a href="#流的概念" class="headerlink" title="流的概念"></a>流的概念</h2><p>流（Stream）是指在计算机的输入输出操作中各部件之间的数据流动。<br>Java 中一个流被定义为一个数据序列。</p>
+<h3 id="流的分类"><a href="#流的分类" class="headerlink" title="流的分类"></a>流的分类</h3><p><img src="\images\pages\java_io_class.png" alt="javaIO类层次"></p>
+<h3 id="输入流与输出流"><a href="#输入流与输出流" class="headerlink" title="输入流与输出流"></a>输入流与输出流</h3><p>流按照数据的传输方向，可分为输入流与输出流（针对内存输入或输出）。<br>一般来说关于流的特性有下面几点：</p>
+<ul>
+<li>先进先出，最先写入输出流的数据最先被输入流读取到；</li>
+<li>顺序存取，可以一个接一个地往流中写入一串字节，读出时也将按写入顺序读取一串字节，不能随机访问中间的数据；</li>
+<li>只读或只写，每个流只能是输入流或输出流的一种，不能同时具备两个功能，在一个数据传输通道中，如果既要写入数据，又要读取数据，则要分别提供两个流；</li>
+</ul>
+<h3 id="字节流与字符流"><a href="#字节流与字符流" class="headerlink" title="字节流与字符流"></a>字节流与字符流</h3><p>流按照数据的传输单位，可分为字节流与字符流。</p>
+<ul>
+<li>字节流：读写8位二进制的字节；</li>
+<li>字符流：读写16位二进制的字符；</li>
+</ul>
+<h3 id="节点流与过滤流（待争琢）"><a href="#节点流与过滤流（待争琢）" class="headerlink" title="节点流与过滤流（待争琢）"></a>节点流与过滤流（<strong>待争琢</strong>）</h3><p>流按照功能，可分为节点流与过滤流。</p>
+<ul>
+<li>节点流：直接操作目标设备的流，eg：磁盘或内存；</li>
+<li>过滤流：对一个已存在的流的封装，对数据进行处理，为程序提供功能强大、灵活的读写功能，不直接操作数据源；<br>eg:缓冲流：为了提高数据的传输效率，引入了缓冲流（Buffered Stream）的概念，即为一个流配备一个缓冲区（Buffer），一个缓冲区就是专门用于传送数据的一块内存。</li>
+</ul>
+<h2 id="字节流"><a href="#字节流" class="headerlink" title="字节流"></a>字节流</h2><p>字节流以字节为传输单位，用来读写8位的数据，除了能够处理纯文本文件之外，还能用来处理二进制文件的数据。<br>由于 InputStream 和 OutputStream 都是抽象类，是所有字节流的父类。所以在程序中创建的输入流对象一般是它们某个子类的对象，通过调用对象继承的 read() 和 write() 方法就可实现对相应外设的输入输出操作。</p>
+<h3 id="InputStream"><a href="#InputStream" class="headerlink" title="InputStream"></a>InputStream</h3><p>面向字节的输入流都是 InputStream 类的子类，其类层次结构如图:</p>
+<p><img src="\images\pages\java_io_InputStream.png" alt="InputStream 抽象类层次结构"></p>
+<p>InputStream 流类中包含一套所有输入都需要的方法，可以完成最基本的从输入流读入数据的功能，常用方法：</p>
+<ul>
+<li>read()：从输入流中当前位置读入一个字节的二进制数据，以此数据为低位字节，补足16位的整型量（0~255）后返回，若输入流中当前位置没有数据，则返回-1；</li>
+<li>read(byte b[])：从输入流中的当前位置连续读入多个字节保存在数组中，并返回所读取的字节数；</li>
+<li>int read(byte b[], int off, int len)：从输入流中当前位置连续读 len 长的字节，从数组第off+1个元素位置处开始存放，并返回所读取的字节数；</li>
+<li>available()：返回输入流中可以读取的字节数；</li>
+<li>skip(long n)：跳过流内的n个字符；</li>
+<li>close()：关闭输入流；</li>
+</ul>
+<h4 id="FileInputStream"><a href="#FileInputStream" class="headerlink" title="FileInputStream"></a>FileInputStream</h4><p>FileInputStream 是用于从文件读取字节数据的 InputStream 子类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream fis = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    fis = <span class="keyword">new</span> FileInputStream(<span class="string">"G:/hexoWorkspace/ioStu.txt"</span>);</span><br><span class="line">    <span class="keyword">int</span> date = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> ((date = fis.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">        System.out.println((<span class="keyword">char</span>)date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">null</span> != fis)&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fis.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="OutputStream"><a href="#OutputStream" class="headerlink" title="OutputStream"></a>OutputStream</h3><p>面向字节的输出流都是 OutputStream 类的子类，其类层次结构如图：</p>
+<p><img src="\images\pages\java_io_OutputStream.jpg" alt="OutputStream 抽象类层次结构"></p>
+<p>OutputStream 流类中包含一套所有输出都需要的方法，可以完成最基本的向输出流写入数据的功能，常用方法：</p>
+<ul>
+<li>write(int b)：将参数b的低位字节写入到输出流；</li>
+<li>write(byte b[])：按顺序将数组b[]中的全部字节写入到输出流；</li>
+<li>write(byte b[], int off, int len)：按顺序将数组b[]中第off+1个元素开始的len个数据写入到输出流；</li>
+<li>flush()：强制清空缓冲区并执行向外设输出数据；</li>
+<li>close()：关闭输出流；</li>
+</ul>
+<h4 id="FileOutputStream"><a href="#FileOutputStream" class="headerlink" title="FileOutputStream"></a>FileOutputStream</h4><p>FileOutputStream 是用于向文件写入字节数据的 OutputStream 子类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fos = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"G:/hexoWorkspace/ioStu.txt"</span>);</span><br><span class="line">    String str = <span class="string">"hello,FileOutputStream 练习"</span>;</span><br><span class="line">    str.getBytes();</span><br><span class="line">    fos.write(str.getBytes());</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">null</span> != fos)&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fos.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="字符流"><a href="#字符流" class="headerlink" title="字符流"></a>字符流</h2><p>字符流是针对字符数据的特点进行过优化的，因而提供一些面向字符的有用特性，字符流的源或目标通常是文本文件。<br>由于 Reader 和 Writer 都是抽象类，是 java.io 包中所有字符流的父类，所以应使用它们的子类来创建实体对象，利用对象来处理相关的读写操作。<br>Reader 和 Writer 的子类又可以分为两大类：一类用来从数据源读入数据或往目的地写出数据（称为节点流），另一类对数据执行某种处理（称为处理流）。</p>
+<h3 id="Reader"><a href="#Reader" class="headerlink" title="Reader"></a>Reader</h3><p>面向字符的输入流类都是 Reader 的子类，其类层次结构如图：</p>
+<p><img src="\images\pages\java_io_Reader.png" alt="Reader 抽象类层次结构"></p>
+<p>可以利用 Reader 所提供的这些方法来获得流内的位数据，常用方法：</p>
+<ul>
+<li>read()：从输入流中读取一个字符；</li>
+<li>read(char[] ch)：从输入流中读取字符数组；</li>
+<li>read(char[] ch, int off, int len)：从输入流中读 len 长的字符到 ch 内；</li>
+<li>ready()：测试流是否可以读取；</li>
+<li>reset()：重定位输入流；</li>
+<li>skip(long n)：跳过流内的 n 个字符；</li>
+<li>close()：关闭输入流；</li>
+</ul>
+<h4 id="FileReader"><a href="#FileReader" class="headerlink" title="FileReader"></a>FileReader</h4><p>FileReader 类是 Reader 子类 InputStreamReader 类的子类，因此 FileReader 类既可以使用Reader 类的方法也可以使用 InputStreamReader 类的方法来创建对象。</p>
+<p><em>需要注意的是，Java 把一个汉字或英文字母作为一个字符对待，回车或换行作为两个字符对待。</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> a[] = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">100</span>]; <span class="comment">// 创建可容纳 100 个字符的数组    </span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    FileReader fb = <span class="keyword">new</span> FileReader(<span class="string">"G:/hexoWorkspace/ioStu.txt"</span>);</span><br><span class="line">    <span class="keyword">int</span> num = fb.read(a); <span class="comment">// 将数据读入到数组 a 中，并返回字符数</span></span><br><span class="line">    String str = <span class="keyword">new</span> String(a, <span class="number">0</span>, num); <span class="comment">// 将字符串数组转换成字符串</span></span><br><span class="line">    System.out.println(<span class="string">"读取的字符个数为："</span> + num + <span class="string">",内容为：\n"</span>);</span><br><span class="line">    System.out.println(str);</span><br><span class="line">    fb.close();</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="BufferedReader"><a href="#BufferedReader" class="headerlink" title="BufferedReader"></a>BufferedReader</h4><p>BufferedReader 类是用来读取缓冲区中的数据。使用时必须创建 FileReader 类对象，再以该对象为参数创建 BufferedReader 类的对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">String readline;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    FileReader a = <span class="keyword">new</span> FileReader(<span class="string">"G:/hexoWorkspace/ioStu.txt"</span>);</span><br><span class="line">    BufferedReader b = <span class="keyword">new</span> BufferedReader(a);</span><br><span class="line">    <span class="keyword">while</span> ((readline = b.readLine()) != <span class="keyword">null</span>) &#123; <span class="comment">// 每次读取 1 行</span></span><br><span class="line">        System.out.println(readline);</span><br><span class="line">    &#125;</span><br><span class="line">    b.close();</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException io) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Writer"><a href="#Writer" class="headerlink" title="Writer"></a>Writer</h3><p>面向字符的输出流都是类 Writer 的子类，其类层次结构如图：</p>
+<p><img src="\images\pages\java_io_Writer.png" alt="Writer 抽象类层次结构"></p>
+<p>Writer 的常用方法：</p>
+<ul>
+<li>close()：关闭输出流；</li>
+<li>flush()：将缓冲区中的数据写到文件中；</li>
+<li>writer(int c)：将单一字符 c 输出到流中；</li>
+<li>writer(String str)：将字符串 str 输出到流中；</li>
+<li>writer(char[] ch)：将字符数组 ch 输出到流；</li>
+<li>writer(char[] ch, int offset, int length)：将一个数组内自 offset 起到 length 长的字符输出到流；</li>
+</ul>
+<h4 id="FileWriter"><a href="#FileWriter" class="headerlink" title="FileWriter"></a>FileWriter</h4><p>FileWriter 类是 Writer 子类 OutputStreamWriter 类的子类，因此 FileWriter 类既可以使用 Writer类的方法也可以使用 OutputStreamWriter 类的方法来创建对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    FileWriter fw = <span class="keyword">new</span> FileWriter(<span class="string">"G:/hexoWorkspace/ioStu.txt"</span>);</span><br><span class="line">    String str = <span class="string">"hello,fileWriter."</span>;</span><br><span class="line">    fw.write(str);</span><br><span class="line">    fw.close();</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="BufferedWriter"><a href="#BufferedWriter" class="headerlink" title="BufferedWriter"></a>BufferedWriter</h4><p>BufferedWriter 类是用来将数据写入到缓冲区。使用时必须创建 FileWriter 类对象，再以该对象为参数创建。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(<span class="string">"G:/hexoWorkspace/ioStu.txt"</span>));</span><br><span class="line">    String str = <span class="string">"hello,bufferedWriter."</span>;</span><br><span class="line">    bw.write(str);</span><br><span class="line">    bw.flush();</span><br><span class="line">    bw.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(IOException e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="RandomAccessFile"><a href="#RandomAccessFile" class="headerlink" title="RandomAccessFile"></a>RandomAccessFile</h2><p>Java.io 包提供了 RandomAccessFile 类用于随机文件的创建和访问。使用这个类，可以跳转到文件的任意位置读写数据。程序可以在随机文件中插入数据，而不会破坏该文件的其他数据。此外，程序也可以更新或删除先前存储的数据，而不用重写整个文件。</p>
+<ul>
+<li>是JAVA I/O流体系中功能最丰富的文件内容访问类，它提供了众多方法来访问文件内容；</li>
+<li>由于可以自由访问文件的任意位置，所以如果需要访问文件的部分内容，RandomAccessFile将是更好的选择；</li>
+<li>可以用来访问保存数据记录的文件，文件的记录的大小不必相同，但是其大小和位置必须是可知的；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">null</span>;</span><br><span class="line">RandomAccessFile raf = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">    String s = br.readLine();</span><br><span class="line"></span><br><span class="line">    raf = <span class="keyword">new</span> RandomAccessFile(<span class="string">"G:/hexoWorkspace/ioStu.txt"</span>, <span class="string">"rws"</span>);<span class="comment">// 第二个参数为模式，包括(只读:"r",读写:"rw",读写加内容更新同步写入底层存储设备:"rws","rwd"?)</span></span><br><span class="line">    <span class="comment">// 移动到文件结尾</span></span><br><span class="line">    raf.seek(raf.length());</span><br><span class="line">    <span class="comment">// 写入数据，任意访问文件的指针在文件的结尾</span></span><br><span class="line">    raf.writeBytes(s + <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 读取时，将指针重置到文件的开始位置</span></span><br><span class="line">    raf.seek(<span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 跳过8字节</span></span><br><span class="line">    <span class="comment">// raf.skipBytes(8) ;</span></span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span>有问题</span></span><br><span class="line">    System.out.println(raf.readLine());</span><br><span class="line"></span><br><span class="line">    br.close();</span><br><span class="line">    raf.close();</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="标准输入输出"><a href="#标准输入输出" class="headerlink" title="标准输入输出"></a>标准输入输出</h2><p>System.in、System.out、System.err 这 3 个标准输入输流对象定义在 java.lang.System 包中，这 3 个对象在 Java 源程序编译时会被自动加载。</p>
+<ul>
+<li>标准输入：标准输入 System.in 是 BufferedInputStream 类的对象，当程序需要从键盘上读入数据时，只需要调用 System.in 的 read()方法即可，该方法从键盘缓冲区读入一个字节的二进制数据，返回以此字节为低位字节，高位字节为 0 的整型数据。</li>
+<li>标准输出：标准输出 System.out 是打印输出流 PrintStream 类的对象。PrintStream 类是过滤输出流类 FilterOutputStream 的一个子类，其中定义了向屏幕输出不同类型数据的方法print()和 println()。</li>
+<li>标准错误输出：System.err 用于为用户显示错误信息，也是由 PrintStream 类派生出来的错误流。Err 流的作用是使 print()和 println()将信息输出到 err 流并显示在屏幕上，以方便用户使用和调试程序。</li>
+</ul>
+<h2 id="流的应用场景"><a href="#流的应用场景" class="headerlink" title="流的应用场景"></a>流的应用场景</h2><ul>
+<li>FileInputStream/FileOutputStream：需要逐个字节处理原始二进制流的时候使用，效率低下</li>
+<li>FileReader/FileWriter：需要组个字符处理的时候使用</li>
+<li>StringReader/StringWriter：需要处理字符串的时候，可以将字符串保存为字符数组</li>
+<li>PrintStream/PrintWriter：用来包装F ileOutputStream 对象，方便直接将String字符串写入文件</li>
+<li>Scanner：用来包装System.in流，很方便地将输入的 String 字符串转换成需要的数据类型</li>
+<li>InputStreamReader/OutputStreamReader：字节和字符的转换桥梁，在网络通信或者处理键盘输入的时候用</li>
+<li>BufferedReader/BufferedWriter：BufferedInputStream/BufferedOutputStream ， 缓冲流用来包装字节流后者字符流，提升 IO 性能，BufferedReader 还可以方便地读取一行，简化编程。</li>
+</ul>
+<h2 id="File"><a href="#File" class="headerlink" title="File"></a>File</h2><p>文件类请参考API，eg:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * File练习</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> deng</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileStu</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> fileLevels = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 遍历File</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> file</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">iteratorDir</span><span class="params">(File file)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span>!=file)&#123;</span><br><span class="line">            <span class="comment">// 文件或空目录返回</span></span><br><span class="line">            <span class="keyword">if</span>(file.isFile() || file.listFiles().length == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                File[] files = sort(file.listFiles());</span><br><span class="line">                <span class="keyword">for</span>(File f:files)&#123;</span><br><span class="line">                    StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">                    <span class="keyword">if</span>(f.isFile())&#123;</span><br><span class="line">                        sb.append(getTab(fileLevels));</span><br><span class="line">                        sb.append(f.getName());</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        sb.append(getTab(fileLevels));</span><br><span class="line">                        sb.append(f.getName());</span><br><span class="line">                        sb.append(<span class="string">"/"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(sb.toString());</span><br><span class="line">                    <span class="keyword">if</span>(f.isDirectory())&#123;</span><br><span class="line">                        fileLevels ++;<span class="comment">//进入目录</span></span><br><span class="line">                        iteratorDir(f);<span class="comment">//递归遍历文件夹</span></span><br><span class="line">                        fileLevels --;<span class="comment">//退出目录</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对File列表排序，先文件夹后文件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> files</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> File[] sort(File[] files)&#123;</span><br><span class="line">        List&lt;File&gt; fileList = <span class="keyword">new</span> ArrayList&lt;File&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* 先目录，再文件 */</span></span><br><span class="line">        <span class="keyword">for</span>(File file:files)&#123;</span><br><span class="line">           <span class="keyword">if</span>(file.isDirectory())&#123;</span><br><span class="line">               fileList.add(file);</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(File file:files)&#123;</span><br><span class="line">            <span class="keyword">if</span>(file.isFile())&#123;</span><br><span class="line">                fileList.add(file);</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// list 转换数组</span></span><br><span class="line">        <span class="keyword">return</span> fileList.toArray(<span class="keyword">new</span> File[fileList.size()]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据文件目录级别返回制表符</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> level 文件目录级别</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">getTab</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;level;i++)&#123;</span><br><span class="line">            sb.append(<span class="string">"\t"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.runoob.com/java/java-files-io.html" target="_blank" rel="noopener">Java 流(Stream)、文件(File)和IO(runoob)</a></p>
+<p><a href="http://www.weixueyuan.net/java/rumen_9/" target="_blank" rel="noopener">Java输入输出(IO)操作</a></p>
+<p><a href="https://blog.csdn.net/baobeisimple/article/details/1713797" target="_blank" rel="noopener">Java IO完全总结</a></p>
+<p><a href="https://www.cnblogs.com/fysola/p/6123947.html" target="_blank" rel="noopener">JAVA基础知识之IO</a></p>
+
+      
+    </div>
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+            <a href="/tags/IO/" rel="tag"><i class="fa fa-tag"></i> IO</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/12/java_thread/" rel="next" title="java基础之多线程">
+                <i class="fa fa-chevron-left"></i> java基础之多线程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/13/java_net/" rel="prev" title="java基础之网络编程">
+                java基础之网络编程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">nocoder</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/donzero" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:donzero@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#流的概念"><span class="nav-number">1.</span> <span class="nav-text">流的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#流的分类"><span class="nav-number">1.1.</span> <span class="nav-text">流的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输入流与输出流"><span class="nav-number">1.2.</span> <span class="nav-text">输入流与输出流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节流与字符流"><span class="nav-number">1.3.</span> <span class="nav-text">字节流与字符流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点流与过滤流（待争琢）"><span class="nav-number">1.4.</span> <span class="nav-text">节点流与过滤流（待争琢）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字节流"><span class="nav-number">2.</span> <span class="nav-text">字节流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InputStream"><span class="nav-number">2.1.</span> <span class="nav-text">InputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FileInputStream"><span class="nav-number">2.1.1.</span> <span class="nav-text">FileInputStream</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OutputStream"><span class="nav-number">2.2.</span> <span class="nav-text">OutputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FileOutputStream"><span class="nav-number">2.2.1.</span> <span class="nav-text">FileOutputStream</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符流"><span class="nav-number">3.</span> <span class="nav-text">字符流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reader"><span class="nav-number">3.1.</span> <span class="nav-text">Reader</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FileReader"><span class="nav-number">3.1.1.</span> <span class="nav-text">FileReader</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BufferedReader"><span class="nav-number">3.1.2.</span> <span class="nav-text">BufferedReader</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Writer"><span class="nav-number">3.2.</span> <span class="nav-text">Writer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FileWriter"><span class="nav-number">3.2.1.</span> <span class="nav-text">FileWriter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BufferedWriter"><span class="nav-number">3.2.2.</span> <span class="nav-text">BufferedWriter</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RandomAccessFile"><span class="nav-number">4.</span> <span class="nav-text">RandomAccessFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准输入输出"><span class="nav-number">5.</span> <span class="nav-text">标准输入输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流的应用场景"><span class="nav-number">6.</span> <span class="nav-text">流的应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#File"><span class="nav-number">7.</span> <span class="nav-text">File</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">nocoder</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问次数
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
